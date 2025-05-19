@@ -1,4 +1,4 @@
-package com.example.myassssmentapplication
+package com.example.myassessmentapplication
 
 import android.os.Bundle
 import android.widget.*

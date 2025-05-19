@@ -1,7 +1,7 @@
-package com.example.myassssmentapplication
+package com.example.myassessmentapplication
 
 
-//import com.example.myassssmentapplication.network.ApiService
+import com.example.myassessmentapplication.network.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

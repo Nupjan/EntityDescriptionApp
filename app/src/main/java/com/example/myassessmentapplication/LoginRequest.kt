@@ -1,3 +1,3 @@
-package com.example.myassssmentapplication
+package com.example.myassessmentapplication
 
 data class LoginRequest(val username: String, val password: String)

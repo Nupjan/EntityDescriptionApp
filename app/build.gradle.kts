@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
 }
 
+
 android {
     namespace = "com.example.myassssmentapplication"
     compileSdk = 34
@@ -18,6 +19,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    
+    kapt {
+        correctErrorTypes = true
+    }
+
 
     buildTypes {
         release {
@@ -27,6 +33,7 @@ android {
                 "proguard-rules.pro"
             )
         }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -49,8 +56,9 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
-    implementation("com.google.dagger:hilt-android:2.41")
-    kapt("com.google.dagger:hilt-compiler:2.41")
+    implementation("com.google.dagger:hilt-android:2.45")
+    kapt("com.google.dagger:hilt-compiler:2.45")
+    implementation("com.google.code.gson:gson:2.10.1")
 
 
 

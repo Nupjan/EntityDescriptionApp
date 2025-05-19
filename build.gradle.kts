@@ -3,6 +3,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    id("com.google.dagger.hilt.android") version "2.41" apply false
-    kotlin("kapt") version "2.1.20"
+    id("com.google.dagger.hilt.android") version "2.45" apply false
+    kotlin("kapt") version "1.8.20" apply false
+
 }
