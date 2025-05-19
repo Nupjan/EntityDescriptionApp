@@ -7,4 +7,9 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("sydney/auth") // change this based on your class location
     fun login(@Body request: LoginRequest): Call<LoginResponse>
+
+    @GET("dashboard/{keypass}")
+    fun getDashboardData(@Path("keypass") keypass: String): Call<JsonObject>
+
+
 }

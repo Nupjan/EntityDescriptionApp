@@ -3,12 +3,16 @@ package com.example.myassssmentapplication
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    @Inject
+    lateinit var apiService: ApiService
     lateinit var etUsername: EditText
     lateinit var etPassword: EditText
     lateinit var btnLogin: Button
@@ -34,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
             val request = LoginRequest(username, password)
 
-            RetrofitClient.instance.login(request).enqueue(object : Callback<LoginResponse> {
+            apiService.login(request).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful) {
                         val keypass = response.body()?.keypass

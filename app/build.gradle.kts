@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 android {
@@ -47,6 +49,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
+    implementation("com.google.dagger:hilt-android:2.41")
+    kapt("com.google.dagger:hilt-compiler:2.41")
 
 
 
