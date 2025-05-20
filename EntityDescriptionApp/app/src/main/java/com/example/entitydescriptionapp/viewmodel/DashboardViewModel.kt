@@ -1,36 +1,64 @@
 package com.example.entitydescriptionapp.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import retrofit2.Response
 import com.example.entitydescriptionapp.di.Dash
-
+import java.io.IOException
+import android.util.Log
+import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val repository: Dash
 ) : ViewModel() {
 
-    // Now each entity is a Map<String, Any?>
-    val entities = MutableLiveData<List<Map<String, Any?>>>()
-    val error = MutableLiveData<String?>()
+    // Encapsulated mutable LiveData
+    private val _entities = MutableLiveData<List<Map<String, Any?>>>()
+    val entities: LiveData<List<Map<String, Any?>>> = _entities
+
+    private val _error = MutableLiveData<String?>()
+    val error: LiveData<String?> = _error
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
 
     fun loadDashboard(keypass: String) {
+        if (keypass.isBlank()) {
+            _error.value = "Invalid keypass"
+            return
+        }
+
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val response = repository.getDashboardData(keypass)
                 if (response.isSuccessful) {
-                    // Even if the API returns null, default to an empty list
-                    entities.postValue(response.body()?.entities ?: emptyList())
+                    _entities.value = response.body()?.entities ?: emptyList()
                 } else {
-                    error.postValue("Error: ${response.code()}")
+                    _error.value = when (response.code()) {
+                        404 -> "Data not found"
+                        401 -> "Unauthorized"
+                        else -> "Error: ${response.code()}"
+                    }
                 }
+            } catch (e: IOException) {
+                _error.value = "Network error"
+                Log.e("DashboardVM", "Network call failed", e)
             } catch (e: Exception) {
-                error.postValue("Failed: ${e.message}")
+                _error.value = "Unexpected error"
+                Log.e("DashboardVM", "API error", e)
+            } finally {
+                _isLoading.value = false
             }
         }
+    }
+
+    fun clearError() {
+        _error.value = null
     }
 }

@@ -3,10 +3,10 @@ package com.example.entitydescriptionapp.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.entitydescriptionapp.di.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.example.entitydescriptionapp.di.Auth
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -28,7 +28,7 @@ class LoginViewModel @Inject constructor(
                     errorMessage.postValue("Login failed: ${response.code()}")
                 }
             } catch (e: Exception) {
-                errorMessage.postValue("Error: ${e.message}")
+                errorMessage.postValue("Unexpected error: ${e.localizedMessage}")
             }
         }
     }

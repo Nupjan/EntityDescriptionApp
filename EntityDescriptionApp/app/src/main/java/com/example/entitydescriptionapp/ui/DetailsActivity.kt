@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.entitydescriptionapp.databinding.ActivityDetailsBinding
 
 
-
 class DetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailsBinding
@@ -16,32 +15,49 @@ class DetailsActivity : AppCompatActivity() {
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupToolbar()
+        populateDetails()
+    }
+
+    private fun setupToolbar() {
         setSupportActionBar(binding.topAppBar)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Details"
-
-        binding.topAppBar.setNavigationOnClickListener {
-            finish()
-            overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = "Details"
         }
 
-        val container = binding.detailsContainer
+        // Handle back navigation (consistent with onSupportNavigateUp)
+        binding.topAppBar.setNavigationOnClickListener {
+            finishWithTransition()
+        }
+    }
+
+    private fun populateDetails() {
         intent.extras?.keySet()?.forEach { key ->
             val value = intent.getStringExtra(key) ?: "N/A"
-            val textView = TextView(this).apply {
-                text = "$key: $value"
-                textSize = 16f
-                setPadding(0, 12, 0, 12)
-            }
-            container.addView(textView)
+            addDetailTextView(key, value)
         }
+    }
 
+    private fun addDetailTextView(key: String, value: String) {
+        TextView(this).apply {
+            text = "$key: $value"
+            textSize = 16f
+            setPadding(0, 12, 0, 12)
+            binding.detailsContainer.addView(this)
+        }
+    }
 
+    private fun finishWithTransition() {
+        finish()
+        overridePendingTransition(
+            android.R.anim.slide_in_left,
+            android.R.anim.slide_out_right
+        )
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
+        finishWithTransition()
         return true
     }
 }
