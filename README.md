@@ -64,11 +64,6 @@ graph TD
 3. Sync Gradle dependencies
 4. Build and run
 
-## 🧪 Testing
-Run unit tests with:
-```bash
-./gradlew test
-```
 
 ## 📂 Project Structure
 ```
