@@ -1,12 +1,13 @@
 package com.example.entitydescriptionapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import android.content.Intent
-import com.example.entitydescriptionapp.databinding.ActivityLoginBinding
+import androidx.appcompat.app.AlertDialog
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.example.entitydescriptionapp.databinding.ActivityLoginBinding
 import com.example.entitydescriptionapp.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,6 +17,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private val viewModel: LoginViewModel by viewModels()
 
+    private var selectedCity: String = "Sydney"
+    private var locationInput: String = "sydney"  // Default location
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -23,12 +27,13 @@ class LoginActivity : AppCompatActivity() {
 
         Toast.makeText(this, "Login Screen Initiated", Toast.LENGTH_SHORT).show()
 
+        setupLocationSelector()
+
         binding.loginButton.setOnClickListener {
             val username = binding.usernameEditText.text.toString().trim()
             val password = binding.passwordEditText.text.toString().trim()
-            val location = "sydney"  //change location manually here
 
-            viewModel.login(username, password, location)
+            viewModel.login(username, password, locationInput)
         }
 
         viewModel.loginResult.observe(this) { keypass ->
@@ -40,12 +45,39 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-
         viewModel.errorMessage.observe(this) { error ->
             error?.let {
                 Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
                 Log.e("LOGIN_ERROR", it)
             }
+        }
+    }
+
+    private fun setupLocationSelector() {
+        val options = arrayOf("Sydney", "Brisbane", "Melbourne")
+
+        val locationMap = mapOf(
+            "Sydney" to "sydney",
+            "Brisbane" to "ort",
+            "Melbourne" to "footscray"
+        )
+
+        // Set initial button text
+        binding.locationSelectButton.text = "Location: $selectedCity"
+
+        binding.locationSelectButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle("Choose your location")
+                .setSingleChoiceItems(options, options.indexOf(selectedCity)) { dialog, which ->
+                    selectedCity = options[which]
+                    locationInput = locationMap[selectedCity] ?: "sydney"
+                }
+                .setPositiveButton("OK") { dialog, _ ->
+                    binding.locationSelectButton.text = "Location: $selectedCity"
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
     }
 }

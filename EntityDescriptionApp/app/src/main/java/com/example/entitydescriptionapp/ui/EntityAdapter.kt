@@ -25,19 +25,16 @@ class EntityAdapter(private val items: List<Map<String, Any?>>) :
     override fun onBindViewHolder(holder: EntityViewHolder, position: Int) {
         val item = items[position]
 
-        // Dynamically select the display title. Here, we simply pick the first non-empty string value.
         val displayTitle = item.values.firstOrNull { value ->
             value is String && value.toString().isNotBlank()
         }?.toString() ?: "Untitled"
 
         holder.binding.textProperty1.text = displayTitle
 
-        // On click, pass all key-value pairs to DetailsActivity
         holder.binding.root.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, DetailsActivity::class.java)
             item.forEach { (key, value) ->
-                // Put each value as a String extra; if null, "N/A"
                 intent.putExtra(key, value?.toString() ?: "N/A")
             }
             context.startActivity(intent)

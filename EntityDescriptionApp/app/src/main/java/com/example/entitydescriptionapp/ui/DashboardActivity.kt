@@ -40,7 +40,7 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Logout Button Logic
+
         binding.logoutButton.setOnClickListener {
             val intent = Intent(this@DashboardActivity, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
